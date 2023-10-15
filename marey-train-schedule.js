@@ -21,12 +21,12 @@ function createSchedule() {
         .attr("viewBox", [0, 0, width, height]);
 
     svg.append("g")
-        .attr("fill", "black")
         .append("rect")
-            .attr("x", 0)
-            .attr("y", 0)
-            .attr("width", width/2)
-            .attr("height", height);
+            .attr("x", 10)
+            .attr("y", 10)
+            .attr("width", width/2 - 20)
+            .attr("height", height - 20)
+            .attr("style", "stroke:gray;fill:transparent;stroke-width:1");
 
     t79TS.d3OutputElm.appendChild(svg.node());
 }
