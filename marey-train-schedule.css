@@ -1,0 +1,43 @@
+:root {
+    --background-color: #fffef1;
+    --default-font: 'Helvetica Neue', Helvetica, Tahoma, Verdana, sans-serif;
+    --default-font-weight: 600;
+}
+
+*,
+*::after,
+*::before {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 14px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100vw;
+    background-color: var(--background-color);
+    font-family: var(--default-font);
+    font-weight: var(--default-font-weight);
+}
+
+#content {
+    width: 80%;
+}
+
+header {
+    width: 100%;
+}
+
+#d3vis {
+    width: 100%
+}
