@@ -41,3 +41,8 @@ header {
 #d3vis {
     width: 100%
 }
+
+#d3vis svg {
+    width: 100%;
+    height: auto;
+}
