@@ -67,6 +67,11 @@ function createSchedule(data) {
             .attr("y1", (d) => y(d.distance))
             .attr("y2", (d) => y(d.distance))
 
+    // svg.append("g")
+    //     .attr("style", "stroke:black;stroke-width:2")
+    //     .selectAll("line")
+    
+
     svg.append("g")
         .append("rect")
             .attr("x", 10)
