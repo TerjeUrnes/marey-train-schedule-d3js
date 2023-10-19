@@ -24,18 +24,57 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
+    gap: 5rem;
+    padding: 1rem;
+    padding-bottom: 6rem;
     width: 100vw;
     background-color: var(--background-color);
     font-family: var(--default-font);
-    font-weight: var(--default-font-weight);
 }
 
-#content {
-    width: 80%;
+a,
+a:hover,
+a:active {
+    text-decoration: none;
+    color: black
+}
+
+#top {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: flex-start;
+    align-self: flex-start;
+    gap: 2rem;
 }
 
 header {
     width: 100%;
+    align-self: flex-start;
+    font-size: 1.1rem;
+    line-height: 1.1;
+}
+
+#the-original img{
+    height: auto;
+    width: 100%;
+}
+
+header img {
+    height: 1.3rem;
+    width: auto;
+    transform: translate(0,0.2rem);
+}
+
+h1 {
+    font-size: 1.6rem;
+}
+
+main {
+    width: 80%;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    gap: 5rem;
 }
 
 #d3vis {
@@ -45,4 +84,17 @@ header {
 #d3vis svg {
     width: 100%;
     height: auto;
+}
+
+footer {
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: flex-start;
+    align-self: flex-start;
+}
+
+#line {
+    width: 10rem;
+    min-height: 0.5rem;
+    border-top: 1px solid black;
 }

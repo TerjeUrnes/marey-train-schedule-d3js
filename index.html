@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -9,16 +10,38 @@
     <script src="marey-train-schedule.js"></script>
 
 </head>
+
 <body>
 
-    <div id="content">
+    <div id="top">
         <header>
-            <h1>Marey Train Schedule</h1>
+            <h1>Marey's Train Schedule</h1>
+            D3js reproduction of the train schedule made by E. J. Marey.<br>
+            Showing the trains between Paris and Lyon in the 1880s.<sup>[1]</sup><br>
+            It was published in 1885.<br>
+            <a href="https://github.com/TerjeUrnes/marey-train-schedule-d3js">Source hostet at <img
+                    src="github.svg"></a>
         </header>
+        
+    </div>
+    <main>
+
         <div id="d3vis">
 
+
         </div>
-    </div>
+
+        <div id="the-original">
+            <h2>The original, schedule between Paris and Lyon.</h2>
+            <img src="git-assets/readme-images/marey-train-timetable-1885.webp" alt="The original by E. J. Marey">
+        </div>
+
+    </main>
+    <footer>
+        <div id="line"></div>
+        [1] 
+    </footer>
 
 </body>
+
 </html>
