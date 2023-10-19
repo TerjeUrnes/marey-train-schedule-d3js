@@ -12,7 +12,7 @@ function initSchedule() {
 }
 
 function openData() {
-    d3.csv("data/distance.csv").then(
+    d3.csv("data/data.csv").then(
         (result) => { createSchedule(result); }
     );
 }
@@ -27,7 +27,7 @@ function createSchedule(data) {
     }
 
     width = t79TS.d3OutputElm.clientWidth * 2;
-    height = Math.floor(width * 0.66);
+    height = Math.floor(width * 0.5);
 
     console.log(data);
     const maxDistance = d3.max(data, (d) => parseInt(d.distance));
@@ -67,10 +67,24 @@ function createSchedule(data) {
             .attr("y1", (d) => y(d.distance))
             .attr("y2", (d) => y(d.distance))
 
-    // svg.append("g")
-    //     .attr("style", "stroke:black;stroke-width:2")
-    //     .selectAll("line")
-    
+
+    var keys = Object.keys(data[0]);
+
+    var previusKey;
+    Object.keys(data[0]).forEach(element => {
+        if (["station", "distance"].includes(element) == false) {
+            
+            const line = d3.line()
+                .x(d => x((parseInt(d[element][0] + d[element][1]) * 60)+(parseInt(d[element][3] + d[element][4]))))
+                .y(d => y(d.distance))
+
+            svg.append("path")
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 2.5)
+                .attr("d", line(data));
+        }
+    });
 
     svg.append("g")
         .append("rect")
