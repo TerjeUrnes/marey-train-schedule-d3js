@@ -19,19 +19,10 @@ function openData() {
 
 function createSchedule(data) {
 
-    if (data != null) {
-        t79TS.data = data;
-    }
-    else {
-        data = t79TS.data;
-    }
-
     width = t79TS.d3OutputElm.clientWidth * 2;
     height = Math.floor(width * 0.5);
 
-    console.log(data);
     const maxDistance = d3.max(data, (d) => parseInt(d.distance));
-    console.log(maxDistance);
 
     const y = d3.scaleLinear()
         .domain([0,maxDistance])
@@ -69,8 +60,6 @@ function createSchedule(data) {
 
 
     var keys = Object.keys(data[0]);
-
-    var previusKey;
     Object.keys(data[0]).forEach(element => {
         if (["station", "distance"].includes(element) == false) {
             
