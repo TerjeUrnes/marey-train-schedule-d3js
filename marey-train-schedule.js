@@ -39,46 +39,47 @@ export class MareyTrainSchedule {
 
         let data = this._data;
 
-        Object.keys(data[0]).forEach(element => {
-            if (["station", "distance"].includes(element) == false) {
+        Object.keys(data[0]).forEach(track => {
+            if (["station", "distance"].includes(track) == false) {
                 for (let i = 0; i < data.length; i++) {
 
-                    let time = (parseInt(data[i][element][0] + data[i][element][1]) * 60) + 
-                            parseInt(data[i][element][3] + data[i][element][4]);
+                    let time = (parseInt(data[i][track][0] + data[i][track][1]) * 60) + 
+                            parseInt(data[i][track][3] + data[i][track][4]);
                     
-                    data[i][element] = { "time": time, "distance": data[i]["distance"]};
+                    data[i][track] = { "time": time, "distance": data[i]["distance"]};
                 }
 
                 let passesMidnight = false;
                 let index = 0;
                 for (let i = 0; i < data.length-1; i++) {
-                    if (Math.abs(data[i][element]["time"] - data[i + 1][element]["time"]) > 800) {
+                    if (Math.abs(data[i][track]["time"] - data[i + 1][track]["time"]) > 800) {
                         passesMidnight = true;
                         index = i;
                     }
                 }
 
-                let element2 = "e" + element;
+                let track2 = "e" + track;
 
                 if (passesMidnight) {
                     for (let i = 0; i <= index - 1; i++) {
-                        data[i][element2] = { "time": NaN, "distance": NaN};
+                        data[i][track2] = { "time": NaN, "distance": NaN};
                     }
 
                     let crossing = this.FindMidnightCrossing(
-                        data[index][element]["time"],
-                        data[index][element]["distance"],
-                        data[index + 1][element]["time"],
-                        data[index + 1][element]["distance"]
+                        data[index][track]["time"],
+                        data[index][track]["distance"],
+                        data[index + 1][track]["time"],
+                        data[index + 1][track]["distance"]
                     );
 
-                    data[index][element2] = { "time": crossing["time1"], "distance": crossing["distance"]};
+                    data[index][track2] = { "time": crossing["time1"], "distance": crossing["distance"]};
+                    data[index + 1][track2] = data[index + 1][track];
 
-                    data[index][element] = { "time": crossing["time2"], "distance": crossing["distance"]};
+                    data[index + 1][track] = { "time": crossing["time2"], "distance": crossing["distance"]};
 
-                    for (let i = index + 1; i < data.length; i++) {
-                        data[i][element2] = data[i][element];
-                        data[i][element] = { "time": NaN, "distance": NaN};
+                    for (let i = index + 2; i < data.length; i++) {
+                        data[i][track2] = data[i][track];
+                        data[i][track] = { "time": NaN, "distance": NaN};
                     }
 
                 }
@@ -91,43 +92,58 @@ export class MareyTrainSchedule {
         let startIsLeft = true;
         let distance = 0;
 
+        let dTime = 0;
         if (startTime > endTime) {
+            dTime = endTime + 1440 - startTime;
             startIsLeft = false;
-            if (startDistance < endDistance) {
-                let dTime = endTime + 1440 - startTime;
-                let dDistance = endDistance - startDistance;
-                let slope = dDistance / dTime;
-                let newDDistance = (slope * (1440 - startTime));
-                distance = slope < 0 ? endDistance - newDDistance : endDistance + newDDistance;
-            }
-            else {
-                let dTime = endTime + 1440 - startTime;
-                let dDistance = startDistance - endDistance;
-                let slope = dDistance / dTime;
-                let newDDistance = (slope * (1440 - startTime));
-                distance = slope < 0 ? startDistance - newDDistance : startDistance + newDDistance;
-            }
         }
         else {
-            if (startDistance < endDistance) {
-                let dTime = endTime - 1440 - startTime;
-                let dDistance = endDistance - startDistance;
-                let slope = dDistance / dTime;
-                let newDDistance = (slope * (1440 - startTime));
-                distance = slope < 0 ? endDistance - newDDistance : endDistance + newDDistance;
-            }
-            else {
-                let dTime = endTime - 1440 - startTime;
-                let dDistance = startDistance - endDistance;
-                let slope = dDistance / dTime;
-                let newDDistance = (slope * (1440 - startTime));
-                distance = slope < 0 ? startDistance - newDDistance : startDistance + newDDistance;
-            }
+            console.log("Time vrong??");
+            dTime = startTime + endTime - 1440;
         }
+        
+        let dDistance = startDistance - endDistance;
+        let slope = dDistance / dTime;
+        let newDDistance = (slope * (1440 - startTime));
+        distance = slope < 0 ? startDistance - newDDistance : startDistance + newDDistance;
+
+        // if (startTime > endTime) {
+        //     startIsLeft = false;
+        //     if (startDistance < endDistance) {
+        //         let dTime = endTime + 1440 - startTime;
+        //         let dDistance = endDistance - startDistance;
+        //         let slope = dDistance / dTime;
+        //         let newDDistance = (slope * (1440 - startTime));
+        //         distance = slope < 0 ? endDistance - newDDistance : endDistance + newDDistance;
+        //     }
+        //     else {
+        //         let dTime = endTime + 1440 - startTime;
+        //         let dDistance = startDistance - endDistance;
+        //         let slope = dDistance / dTime;
+        //         let newDDistance = (slope * (1440 - startTime));
+        //         distance = slope < 0 ? startDistance - newDDistance : startDistance + newDDistance;
+        //     }
+        // }
+        // else {
+        //     if (startDistance < endDistance) {
+        //         let dTime = endTime - 1440 - startTime;
+        //         let dDistance = endDistance - startDistance;
+        //         let slope = dDistance / dTime;
+        //         let newDDistance = (slope * (1440 - startTime));
+        //         distance = slope < 0 ? endDistance - newDDistance : endDistance + newDDistance;
+        //     }
+        //     else {
+        //         let dTime = endTime - 1440 - startTime;
+        //         let dDistance = startDistance - endDistance;
+        //         let slope = dDistance / dTime;
+        //         let newDDistance = (slope * (1440 - startTime));
+        //         distance = slope < 0 ? startDistance - newDDistance : startDistance + newDDistance;
+        //     }
+        // }
 
         return {
-            "time1": startIsLeft ? endTime : 0,
-            "time2": startIsLeft ? endTime : 1440,
+            "time1": startIsLeft ? 1440 : 0,
+            "time2": startIsLeft ? 0 : 1440,
             "distance": distance
         }
     }
@@ -191,7 +207,7 @@ export class MareyTrainSchedule {
             if (["station", "distance"].includes(element) == false) {
                 
                 const line = d3.line()
-                    .defined(d => !isNaN(d[element]["time"]))
+                    .defined(d => !isNaN(d[element]["time"]) && !isNaN(d[element]["distance"]))
                     .x(d => this._timeScale(d[element]["time"]))
                     .y(d => this._distScale(d[element]["distance"]))
     
