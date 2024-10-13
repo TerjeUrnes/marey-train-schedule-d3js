@@ -93,53 +93,24 @@ export class MareyTrainSchedule {
         let distance = 0;
 
         let dTime = 0;
+        let dDistance = 0;
+        let slope = 0;
+        let newDDistance = 0;
         if (startTime > endTime) {
             dTime = endTime + 1440 - startTime;
             startIsLeft = false;
+            dDistance = startDistance - endDistance;
+            slope = dDistance / dTime;
+            newDDistance = (slope * (1440 - startTime));
         }
         else {
-            console.log("Time vrong??");
-            dTime = startTime + endTime - 1440;
+            dTime = startTime + 1440 - endTime;
+            dDistance = startDistance - endDistance;
+            slope = dDistance / dTime;
+            newDDistance = (slope * startTime);
         }
         
-        let dDistance = startDistance - endDistance;
-        let slope = dDistance / dTime;
-        let newDDistance = (slope * (1440 - startTime));
         distance = slope < 0 ? startDistance - newDDistance : startDistance + newDDistance;
-
-        // if (startTime > endTime) {
-        //     startIsLeft = false;
-        //     if (startDistance < endDistance) {
-        //         let dTime = endTime + 1440 - startTime;
-        //         let dDistance = endDistance - startDistance;
-        //         let slope = dDistance / dTime;
-        //         let newDDistance = (slope * (1440 - startTime));
-        //         distance = slope < 0 ? endDistance - newDDistance : endDistance + newDDistance;
-        //     }
-        //     else {
-        //         let dTime = endTime + 1440 - startTime;
-        //         let dDistance = startDistance - endDistance;
-        //         let slope = dDistance / dTime;
-        //         let newDDistance = (slope * (1440 - startTime));
-        //         distance = slope < 0 ? startDistance - newDDistance : startDistance + newDDistance;
-        //     }
-        // }
-        // else {
-        //     if (startDistance < endDistance) {
-        //         let dTime = endTime - 1440 - startTime;
-        //         let dDistance = endDistance - startDistance;
-        //         let slope = dDistance / dTime;
-        //         let newDDistance = (slope * (1440 - startTime));
-        //         distance = slope < 0 ? endDistance - newDDistance : endDistance + newDDistance;
-        //     }
-        //     else {
-        //         let dTime = endTime - 1440 - startTime;
-        //         let dDistance = startDistance - endDistance;
-        //         let slope = dDistance / dTime;
-        //         let newDDistance = (slope * (1440 - startTime));
-        //         distance = slope < 0 ? startDistance - newDDistance : startDistance + newDDistance;
-        //     }
-        // }
 
         return {
             "time1": startIsLeft ? 1440 : 0,
@@ -203,18 +174,18 @@ export class MareyTrainSchedule {
     }
 
     DrawTrainLines() {
-        Object.keys(this._data[0]).forEach(element => {
-            if (["station", "distance"].includes(element) == false) {
+        Object.keys(this._data[0]).forEach(track => {
+            if (["station", "distance"].includes(track) == false) {
                 
                 const line = d3.line()
-                    .defined(d => !isNaN(d[element]["time"]) && !isNaN(d[element]["distance"]))
-                    .x(d => this._timeScale(d[element]["time"]))
-                    .y(d => this._distScale(d[element]["distance"]))
+                    .defined(d => !isNaN(d[track]["time"]) && !isNaN(d[track]["distance"]))
+                    .x(d => this._timeScale(d[track]["time"]))
+                    .y(d => this._distScale(d[track]["distance"]))
     
                 this._svg.append("path")
                     .attr("fill", "none")
                     .attr("stroke", "steelblue")
-                    .attr("stroke-width", 2.5)
+                    .attr("stroke-width", 3)
                     .attr("d", line(this._data));
             }
         });
