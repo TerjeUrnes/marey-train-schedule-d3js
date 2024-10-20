@@ -70,7 +70,7 @@ h1 {
 }
 
 main {
-    width: 80%;
+    width: 90%;
     display: flex;
     flex-flow: column nowrap;
     justify-content: flex-start;

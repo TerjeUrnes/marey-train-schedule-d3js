@@ -9,10 +9,18 @@ export class MareyTrainSchedule {
     _distScale;
     _width;
     _height;
+    _verticalLines
+    _horizontalLines;
+    _trainLines;
+    _chartFrame;
 
     constructor() {
         this._visElm = document.getElementById("d3vis");
         this.LoadDataAndDraw();
+
+        window.addEventListener("resize", () => {
+            this.RedrawSchedule().bind(this);
+        });
     }
 
     LoadDataAndDraw() {
@@ -28,11 +36,21 @@ export class MareyTrainSchedule {
         this.SetWidthAndHeight();
         this.MakeLinearScales();
         this.MakeSvg();
+        this.SetSvgSize();
+        this.MakeGroups();
         this.MakeGrid();
         this.DrawTrainLines();
-
         this.DrawFrame();
         this._visElm.appendChild(this._svg.node());
+    }
+
+    RedrawSchedule() {
+        this.SetWidthAndHeight();
+        this.MakeLinearScales();
+        this.SetSvgSize();
+        this.MakeGrid();
+        this.DrawTrainLines();
+        this.DrawFrame();
     }
 
     CleanData() {
@@ -136,10 +154,23 @@ export class MareyTrainSchedule {
     }
 
     MakeSvg() {
-        this._svg = d3.create("svg")
+        this._svg = d3.create("svg");
+    }
+
+    SetSvgSize() {
+        this._svg
             .attr("width", this._width)
             .attr("height", this._height)
             .attr("viewBox", [0, 0, this._width, this._height]);
+    }
+
+    MakeGroups() {
+        this._verticalLines = this._svg.append("g")
+                    .attr("style", "stroke:red");
+        this._horizontalLines = this._svg.append("g")
+                    .attr("style", "stroke:gray");
+        this._trainLines = this._svg.append("g");
+        this._chartFrame = this._svg.append("g");
     }
 
     MakeGrid() {
@@ -148,9 +179,7 @@ export class MareyTrainSchedule {
     }
 
     MakeVerticalLines() {
-        this._svg.append("g")
-            .attr("style", "stroke:red")
-            .selectAll("line")
+        this._verticalLines.selectAll("line")
             .data(this._data)
             .join("line")
                 .attr("x1", 10)
@@ -161,9 +190,7 @@ export class MareyTrainSchedule {
     }
 
     MakeHorizontalLines() {
-        this._svg.append("g")
-            .attr("style", "stroke:gray")
-            .selectAll("line")
+        this._horizontalLines.selectAll("line")
             .data(this._timeScale.ticks(24*6))
             .join("line")
                 .attr("x1", (d) => this._timeScale(d))
@@ -174,6 +201,9 @@ export class MareyTrainSchedule {
     }
 
     DrawTrainLines() {
+
+        const lines = [];
+
         Object.keys(this._data[0]).forEach(track => {
             if (["station", "distance"].includes(track) == false) {
                 
@@ -181,18 +211,25 @@ export class MareyTrainSchedule {
                     .defined(d => !isNaN(d[track]["time"]) && !isNaN(d[track]["distance"]))
                     .x(d => this._timeScale(d[track]["time"]))
                     .y(d => this._distScale(d[track]["distance"]))
-    
-                this._svg.append("path")
-                    .attr("fill", "none")
-                    .attr("stroke", "steelblue")
-                    .attr("stroke-width", 3)
-                    .attr("d", line(this._data));
+
+                lines.push(line);
             }
         });
+
+        this._trainLines.selectAll("path")
+            .data(lines)
+            .join("path")
+                .attr("fill", "none")
+                .attr("stroke", "steelblue")
+                .attr("stroke-width", 3)
+                .attr("d", d => d(this._data));
+
     }
 
     DrawFrame() {
-        this._svg.append("rect")
+        this._chartFrame.selectAll("rect")
+            .data([0])
+            .join("rect")
             .attr("x", 10)
             .attr("y", 10)
             .attr("width", this._width - 20)
