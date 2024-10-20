@@ -1,4 +1,5 @@
-### Remade with d3js
+Remade with d3js  
+v1.0.0
 
 # Train schedule by E. J. Marey
 
