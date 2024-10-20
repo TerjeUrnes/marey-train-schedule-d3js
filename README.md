@@ -2,4 +2,4 @@
 
 # Train schedule by E. J. Marey
 
-![Marey train schedule 1885](git-assets/readme-images/marey-train-timetable-1885.webp)
+![Marey train schedule 1885](assets/marey-train-timetable-1885.webp)
